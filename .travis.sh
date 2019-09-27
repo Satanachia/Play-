@@ -22,6 +22,8 @@ travis_before_install()
         brew update
         brew install qt5
         npm install -g appdmg
+        curl -L --show-error --output vulkansdk.tar.gz https://vulkan.lunarg.com/sdk/download/${VULKAN_SDK_VERSION}/mac/vulkansdk-macos-${VULKAN_SDK_VERSION}.tar.gz?Human=true
+        tar -zxf vulkansdk.tar.gz
     elif [ "$TARGET_OS" = "IOS" ]; then
         brew update
         brew install dpkg
@@ -78,6 +80,7 @@ travis_script()
             fi
         elif [ "$TARGET_OS" = "OSX" ]; then
             export CMAKE_PREFIX_PATH="$(brew --prefix qt5)"
+            export VULKAN_SDK=$(pwd)/../vulkansdk-macos-${VULKAN_SDK_VERSION}/macOS
             cmake .. -G"$BUILD_TYPE"
             cmake --build . --config Release
             ctest -C Release
